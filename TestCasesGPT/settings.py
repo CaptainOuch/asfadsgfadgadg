@@ -32,7 +32,7 @@ CHATGPT_PROMPT = os.getenv("CHATGPT_PROMPT", "Скажи о том что нуж
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = ['*']
+CSRF_TRUSTED_ORIGINS = ['https://asfadsgfadgadg.onrender.com']
 
 # Application definition
 
