@@ -31,7 +31,11 @@ CHATGPT_PROMPT = os.getenv("CHATGPT_PROMPT", "Скажи о том что нуж
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'asfadsgfadgadg.onrender.com',  # ваш хост Render
+    'localhost',
+    '127.0.0.1',
+]
 
 
 # Application definition
