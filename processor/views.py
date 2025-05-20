@@ -49,6 +49,8 @@ def upload_and_list_files(request):
 
     chatgpt_table = request.session.pop("chatgpt_table", None)
 
+    print("Сессия chatgpt_table:", chatgpt_table)
+
     return render(request, "processor/index.html", {
         "form": form,
         "current_file": current_file,
@@ -177,6 +179,10 @@ def apply_priorities_from_chatgpt(original_path, chatgpt_path):
     # Сохраняем новый файл, сохранив группировку
     final_path = original_path.replace(".xlsx", "_final.xlsx")
     wb.save(final_path)
+
+    print("Пытаюсь сохранить финальный файл:", final_path)
+    print("Файл существует:", os.path.exists(final_path))
+    
     return final_path
 
 
@@ -215,6 +221,8 @@ def send_to_chatgpt(text_data, prompt):
 
 
 def process_with_chatgpt(request):
+    print("Запуск приоритизации...")
+    
     """Обрабатывает текущий файл, сохраняет результат и обновляет страницу."""
     uploaded_file = UploadedFile.objects.filter(is_current=True).first()
     if not uploaded_file:
