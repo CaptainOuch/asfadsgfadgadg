@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Приоритизация тест-кейсов</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik+Bubbles&family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #8D6E63;
+            --primary-hover: #6D4C41;
+            --secondary: #f8f9fa;
+            --text: #3E2723;
+            --text-light: #5D4037;
+            --border: #D7CCC8;
+            --success: #689F38;
+            --white: #ffffff;
+            --header-bg: #5D4037;
+            --header-text: #EFEBE9;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #EFEBE9;
+            background-image:
+                url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 10 Q60 0 70 10 T90 30 Q100 40 90 50 T70 70 Q60 80 50 70 T30 50 Q20 40 30 30 T50 10' fill='%238D6E63' fill-opacity='0.1'/%3E%3C/svg%3E"),
+                url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5 Q40 0 45 10 T55 30 Q60 40 50 45 T30 55 Q20 60 15 50 T5 30 Q0 20 10 15 T30 5' fill='%235D4037' fill-opacity='0.1'/%3E%3C/svg%3E");
+            background-attachment: fixed;
+            animation: bgMove 120s linear infinite;
+            margin: 0;
+            padding: 0;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        h1 {
+            font-size: 3.2rem;
+            font-weight: 400;
+            margin-bottom: 1rem;
+            color: var(--header-text);
+            font-family: 'Rubik Bubbles', monospace;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--header-text);
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+            font-family: 'Nunito', sans-serif;
+            line-height: 1.6;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .btn-primary:disabled {
+            background: #B39D97;
+            box-shadow: none;
+        }
+
+        .btn-secondary:disabled {
+            background: #E5DAD7;
+            color: #8C726B;
+        }
+
+        @keyframes bgMove {
+            0% { background-position: 0 0, 50px 100px; }
+            100% { background-position: 1000px 500px, 800px 400px; }
+        }
+
+        .owl-assistant {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 140px;
+            height: 140px;
+            background-image: url('https://png.pngtree.com/png-clipart/20231006/original/pngtree-cute-owl-in-cartoon-png-image_13128467.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            z-index: 100;
+            cursor: pointer;
+            transform-origin: bottom center;
+            animation: owlFloat 3s ease-in-out infinite;
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.2));
+        }
+
+        @keyframes owlFloat {
+            0%, 100% { transform: translateY(0) rotate(-2deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
+        }
+
+        .owl-message {
+            position: absolute;
+            right: 150px;
+            bottom: 40px;
+            background: var(--white);
+            padding: 12px 16px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            max-width: 220px;
+            opacity: 0;
+            transition: opacity 0.4s;
+            font-size: 14px;
+            color: var(--text);
+        }
+
+        .owl-message:after {
+            content: '';
+            position: absolute;
+            right: -10px;
+            bottom: 15px;
+            border-width: 8px 0 8px 12px;
+            border-style: solid;
+            border-color: transparent var(--white);
+        }
+
+        .owl-assistant:hover .owl-message {
+            opacity: 1;
+        }
+
+        header {
+            background-color: var(--header-bg);
+            color: var(--header-text);
+            padding: 2rem 0;
+            margin-bottom: 3rem;
+            box-shadow: var(--shadow);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem 2rem;
+            position: relative;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 1px solid var(--border);
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary);
+        }
+
+        .actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            font-size: 1rem;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+            box-shadow: 0 2px 4px rgba(141, 110, 99, 0.3);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--border);
+            color: var(--text);
+            box-shadow: 0 2px 4px rgba(215, 204, 200, 0.3);
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #C5B9B5;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: #d32f2f;
+            color: var(--white);
+            box-shadow: 0 2px 4px rgba(211, 47, 47, 0.3);
+        }
+
+        .btn-danger:hover {
+            background: #b71c1c;
+            transform: translateY(-2px);
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-info {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--secondary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border: 1px solid var(--border);
+        }
+
+        .file-info svg {
+            width: 24px;
+            height: 24px;
+            color: var(--success);
+        }
+
+        .file-details {
+            flex: 1;
+        }
+
+        .file-name {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .file-size {
+            font-size: 0.875rem;
+            color: var(--text-light);
+        }
+
+        .results {
+            margin-top: 2rem;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .test-cases {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .test-cases th, .test-cases td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .test-cases th {
+            font-weight: 500;
+            background: var(--secondary);
+        }
+
+        .test-cases tr:last-child td {
+            border-bottom: none;
+        }
+
+        .priority {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .priority-high {
+            background: #ffebee;
+            color: #c62828;
+            border: 1px solid #ef9a9a;
+        }
+
+        .priority-medium {
+            background: #fff8e1;
+            color: #f57f17;
+            border: 1px solid #ffcc80;
+        }
+
+        .priority-low {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #a5d6a7;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            color: var(--text-light);
+            font-size: 0.875rem;
+            padding: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 0 1.5rem;
+            }
+
+            .container {
+                padding: 0 1.5rem 1.5rem;
+            }
+
+            .actions {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .owl-assistant {
+                width: 100px;
+                height: 100px;
+            }
+
+            .owl-message {
+                right: 110px;
+                max-width: 180px;
+                font-size: 13px;
+            }
+
+            h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="owl-assistant" id="owlAssistant">
+        <div class="owl-message" id="owlMessage">Ух-ух! Я помогу с приоритизацией тест-кейсов!</div>
+    </div>
+
+    <header>
+        <div class="header-content">
+            <h1>Приоритизация тест-кейсов</h1>
+            <p class="subtitle">Загрузите файл с тест-кейсами, и система автоматически расставит приоритеты</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h2 class="card-title">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                </svg>
+                Загрузка файла
+            </h2>
+
+            <div class="actions">
+                <form method="post" enctype="multipart/form-data" id="uploadForm" style="display: contents;">
+                    {% csrf_token %}
+                    <button type="button" id="uploadBtn" class="btn btn-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                        </svg>
+                        Загрузить файл
+                    </button>
+                    <input type="file" name="file" id="fileInput" class="file-input" accept=".xlsx,.xls,.csv">
+                </form>
+
+                <form method="post" action="{% url 'process_with_chatgpt' %}" style="display: inline;">
+    {% csrf_token %}
+    <button type="submit"
+            id="prioritizeBtn"
+            class="btn {% if current_file %}btn-primary{% else %}btn-primary disabled{% endif %}"
+            {% if not current_file %}disabled{% endif %}>
+        Начать приоритизацию
+    </button>
+</form>
+
+                <button id="changeFileBtn" class="btn btn-secondary" {% if not current_file %}disabled{% endif %}>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+                    </svg>
+                    Выбрать другой
+                </button>
+            </div>
+
+            {% if current_file %}
+                <div class="file-info">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                    <div class="file-details">
+                        <div class="file-name">
+                            {{ current_file.file.name|cut:"uploads/" }}
+                        </div>
+                        <div class="file-size">
+                            {% with current_file.file.size|filesizeformat as size %}
+                                {{ size }}
+                            {% endwith %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            {% if form.file.errors %}
+                <div class="error" style="color: red; margin-top: 5px;">
+                    {{ form.file.errors.0 }}
+                </div>
+            {% endif %}
+        </div>
+
+        {% if processed_filename and chatgpt_table %}
+        <div class="card">
+            <div class="results-header">
+                <h2 class="card-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Результаты приоритизации
+                </h2>
+                <div>
+                    <form method="post" style="display: inline;" id="deleteResultsForm">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="delete_files">
+    <button type="submit"
+            id="deleteResultsBtn"
+            class="btn btn-danger"
+            style="margin-right: 1rem;"
+            data-owl-tooltip="Эта кнопка удалит все загруженные файлы и результаты">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="16" height="16">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+        </svg>
+        Удалить результаты
+    </button>
+</form>
+
+
+                    <a href="/uploads/{{ processed_filename }}" id="downloadBtn" class="btn btn-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                        </svg>
+                        Скачать
+                    </a>
+                </div>
+            </div>
+
+            <div class="results">
+                <table class="test-cases">
+                    <thead>
+                        <tr>
+                            {% for key in chatgpt_table.0.keys %}
+                                <th>{{ key }}</th>
+                            {% endfor %}
+                            <th>Рекомендация</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in chatgpt_table %}
+                            <tr>
+                                {% for key, cell in row.items %}
+                                    {% if key == "Ответы" %}
+                                        <td>
+                                            {% if cell == 1 %}
+                                                <span class="priority priority-high">Высокий</span>
+                                            {% elif cell == 2 %}
+                                                <span class="priority priority-medium">Средний</span>
+                                            {% elif cell == 3 %}
+                                                <span class="priority priority-low">Низкий</span>
+                                            {% else %}
+                                                {{ cell }}
+                                            {% endif %}
+                                        </td>
+                                    {% else %}
+                                        <td>{{ cell }}</td>
+                                    {% endif %}
+                                {% endfor %}
+                                <td>
+                                    {% if row.Ответы == 1 %}
+                                        Проверить в первую очередь
+                                    {% elif row.Ответы == 2 %}
+                                        Проверить после основных сценариев
+                                    {% elif row.Ответы == 3 %}
+                                        Проверить в последнюю очередь
+                                    {% else %}
+                                        —
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const owlAssistant = document.getElementById('owlAssistant');
+            const owlMessage = document.getElementById('owlMessage');
+
+            const owlMessages = {
+                default: "Ух-ух! Я помогу с приоритизацией тест-кейсов!",
+                uploadBtn: "Нажми здесь, чтобы выбрать файл",
+                prioritizeBtn: "Нажми эту кнопку после выбора файла",
+                downloadBtn: "Ты можешь сохранить себе результат!",
+                changeFileBtn: "Хочешь выбрать другой файл?",
+                deleteResultsBtn: "Эта кнопка нужна, чтобы удалить результаты",
+                fileUploaded: "Файл загружен! Теперь нажмите 'Начать приоритизацию'",
+                processing: "Идет анализ тест-кейсов...",
+                resultsReady: "Ух-ух! Результаты готовы! Можешь проверять таблицу"
+            };
+
+            // Инициализация элементов
+            const uploadBtn = document.getElementById('uploadBtn');
+            const prioritizeBtn = document.getElementById('prioritizeBtn');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const changeFileBtn = document.getElementById('changeFileBtn');
+            const deleteResultsBtn = document.getElementById('deleteResultsBtn');
+            const fileInput = document.getElementById('fileInput');
+            const uploadForm = document.getElementById('uploadForm');
+
+            // Подсказки при наведении
+            const elementsWithTooltips = [
+                {element: uploadBtn, message: owlMessages.uploadBtn},
+                {element: prioritizeBtn, message: owlMessages.prioritizeBtn},
+                {element: downloadBtn, message: owlMessages.downloadBtn},
+                {element: changeFileBtn, message: owlMessages.changeFileBtn},
+                {element: deleteResultsBtn, message: owlMessages.deleteResultsBtn}
+            ];
+
+            elementsWithTooltips.forEach(item => {
+                if (item.element) {
+                    item.element.addEventListener('mouseenter', () => {
+                        owlMessage.textContent = item.message;
+                        owlMessage.style.opacity = 1;
+                    });
+                    item.element.addEventListener('mouseleave', () => {
+                        owlMessage.style.opacity = 0;
+                    });
+                }
+            });
+
+            // Обработчики событий
+            if (uploadBtn && fileInput) {
+                uploadBtn.addEventListener('click', () => fileInput.click());
+
+                fileInput.addEventListener('change', function(e) {
+                    if (e.target.files.length > 0) {
+                        uploadForm.submit();
+
+                        owlMessage.textContent = owlMessages.fileUploaded;
+                        owlMessage.style.opacity = 1;
+                        setTimeout(() => owlMessage.style.opacity = 0, 3000);
+                    }
+                });
+            }
+
+            if (changeFileBtn) {
+                changeFileBtn.addEventListener('click', () => {
+                    if (fileInput) fileInput.click();
+                });
+            }
+
+            // Блокировка кнопки приоритизации если нет файла
+            if (prioritizeBtn && !document.querySelector('.file-info')) {
+                prioritizeBtn.classList.add('disabled');
+                prioritizeBtn.setAttribute('aria-disabled', 'true');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Список файлов</title>
+</head>
+<body>
+    <h2>Загруженные файлы</h2>
+    <ul>
+        {% for file in files %}
+            <li>
+                {{ file.file.name }}
+                <a href="{% url 'process_with_chatgpt' file.id %}">Обработать AI</a>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <hr>
+
+    <h2>Обработанные файлы</h2>
+    {% if processed_files %}
+        <ul>
+            {% for filename in processed_files %}
+                <li>
+                    <a href="/uploads/{{ filename }}" download>{{ filename }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Нет обработанных файлов.</p>
+    {% endif %}
+</body>
+</html>
