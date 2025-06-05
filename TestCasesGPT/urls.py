@@ -4,11 +4,12 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
 
-from processor.views import upload_and_list_files, process_with_chatgpt
+from processor.views import upload_and_list_files, process_with_chatgpt, delete_results
 
 urlpatterns = [
     path("", upload_and_list_files, name="home"),
     path("process-ai/", process_with_chatgpt, name="process_with_chatgpt"),
+    path("delete-results/", delete_results, name="delete_results"),
 ]
 
 urlpatterns += static('/uploads/', document_root=os.path.join(settings.BASE_DIR, "uploads"))
