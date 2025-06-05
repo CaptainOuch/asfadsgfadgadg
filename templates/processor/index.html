@@ -432,6 +432,13 @@
                         </div>
                     </div>
                 </div>
+                
+                <form method="post" action="{% url 'delete_results' %}" style="margin-top: 1rem;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">
+                        🗑 Удалить результаты
+                    </button>
+                </form>
             {% endif %}
             {% if form.file.errors %}
                 <div class="error" style="color: red; margin-top: 5px;">
