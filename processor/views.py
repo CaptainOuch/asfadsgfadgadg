@@ -9,6 +9,8 @@ import json
 import requests
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import FileResponse, Http404
+from django.views.decorators.csrf import csrf_protect
+
 from .forms import UploadFileForm
 from .models import UploadedFile
 from django.conf import settings
@@ -49,14 +51,26 @@ def upload_and_list_files(request):
 
     chatgpt_table = request.session.pop("chatgpt_table", None)
 
-    print("Сессия chatgpt_table:", chatgpt_table)
-
     return render(request, "processor/index.html", {
         "form": form,
         "current_file": current_file,
         "processed_filename": processed_filename,
         "chatgpt_table": chatgpt_table,  # 👈 добавили
     })
+
+
+@csrf_protect
+def delete_results(request):
+    if request.method == 'POST':
+        uploads_path = os.path.join(settings.BASE_DIR, 'uploads')  # путь к папке uploads
+        if os.path.exists(uploads_path):
+            for file_name in os.listdir(uploads_path):
+                file_path = os.path.join(uploads_path, file_name)
+                if os.path.isfile(file_path):
+                    os.remove(file_path)
+        # перенаправляем обратно на главную страницу
+        return redirect('home')
+    return redirect('home')
 
 
 def upload_file(request):
@@ -179,10 +193,6 @@ def apply_priorities_from_chatgpt(original_path, chatgpt_path):
     # Сохраняем новый файл, сохранив группировку
     final_path = original_path.replace(".xlsx", "_final.xlsx")
     wb.save(final_path)
-
-    print("Пытаюсь сохранить финальный файл:", final_path)
-    print("Файл существует:", os.path.exists(final_path))
-    
     return final_path
 
 
@@ -221,8 +231,6 @@ def send_to_chatgpt(text_data, prompt):
 
 
 def process_with_chatgpt(request):
-    print("Запуск приоритизации...")
-    
     """Обрабатывает текущий файл, сохраняет результат и обновляет страницу."""
     uploaded_file = UploadedFile.objects.filter(is_current=True).first()
     if not uploaded_file:
